@@ -147,7 +147,7 @@ router.get('/user/:user_id', async(req, res) => {
     
     } catch (error) {
         console.error(error.message);
-        if (error.kind == 'Objectid') {
+        if (error.kind == 'ObjectId') {
                         return res.status(400).json({msg: 'Profile Not Found'})
 
         }
@@ -155,4 +155,27 @@ router.get('/user/:user_id', async(req, res) => {
     }
 });
 
+//@ route GET api/profile
+//@desc delete profile user and post
+//@acces private
+
+router.delete('/',auth, async(req, res) => {
+    try {
+        //todo remove users posts
+
+
+        // remove profile
+        await Profile.findOneAndRemove({ user: req.user.id });
+        
+        // remove user
+        await User.findOneAndRemove({ _id: req.user.id});
+
+        res.json({msg:"User Deleted"});
+    
+    
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error');
+    }
+});
 module.exports = router;
